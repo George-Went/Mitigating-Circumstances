@@ -1,0 +1,43 @@
+
+{% extends "base.html" %}
+{% block content %}
+ 
+<div class="container py-4">
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">Edit Mitigating Circumstance</h2>
+      <form method="post" action="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
+        <div class="form-group">
+          <label for="InputEmail">Title</label>
+          <input type="text" class="form-control" name="title" value="{{data.title}}">
+        </div>
+        
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <select class="form-control" id="subject" name="subject">
+            {% for Subject in Subjects %}
+              <option>{{Subject.name}}</option>
+            {% endfor %}
+          </select>
+          
+        <div class="form-group">
+          <label for="reason">Reason</label>
+          <textarea type="text" class="form-control" name="reason" rows="3" >{{data.reason}}</textarea>
+        </div>
+        
+        <br>
+          <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+      <br>
+      <br>
+      <form action="/{{data.key.id()}}/delete">
+        <input type="submit" class="btn btn-primary" value="Delete {{data.name}}"/>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

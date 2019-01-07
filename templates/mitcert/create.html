@@ -1,0 +1,39 @@
+
+{% extends "base.html" %}
+{% block content %}
+ 
+<div class="container py-4">
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">Submit Mitigating Circumstance</h2>
+      <form method="post" action="" enctype = "multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" class="form-control" name="title"  placeholder="Title">
+        </div>
+        
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <select class="form-control" id="subject" name="subject">
+            {% for Subject in Subjects %}
+              <option>{{Subject.name}}</option>
+            {% endfor %}
+          </select>
+          
+        <div class="form-group">
+          <label for="reason">Reason</label>
+          <textarea type="text" class="form-control" name="reason" rows="3" placeholder="reason for mitigating circumstance"></textarea>
+        </div>
+
+        <br>
+          <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+  
+    </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

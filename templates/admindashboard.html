@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<h1>Hello Staff Member: {{current_user.name}}</h1>
+
+
+
+
+<div class="container py">
+
+        <div class="card">
+          <div class="card-body">
+            
+            <form action="{{url_for('subjects')}}">
+              <input type="submit" class = "btn btn-primary" value="Add a new subject"/>
+            </form>
+
+    
+          </div>
+        </div>
+  
+
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Mitigating Circumstances</h1>
+      </div>
+      {% if MitigatingCircumstances is not none%}
+      <div class="container">
+        <div class="row">
+          <div class="col">Student Name</div>
+          <div class="col">Student Email</div>
+          <div class="col">Subject</div>
+          <div class="col">Title</div>
+          <div class="col">State</div>
+          <div class="col">Date</div>
+        </div>     
+      </div>     
+      <div class="card .list-group-flush">
+      
+        {% for MitigatingCircumstance in MitigatingCircumstances %}
+        <a class="d-flex flex-row" href="/{{MitigatingCircumstance.key.id()}}/review">
+          <div class="col">{{MitigatingCircumstance.student}}</div>
+          <div class="col">{{MitigatingCircumstance.student_email}}</div>
+          <div class="col">{{MitigatingCircumstance.subject}}</div>
+          <div class="col">{{MitigatingCircumstance.title}}</div>
+          <div class="col">{{MitigatingCircumstance.state}}</div>
+          <div class="col">{{MitigatingCircumstance.date}}</div>
+        </a>
+        {% endfor %}
+        
+      {% else %}
+        <div class = "container">
+          <h4> You have no mitigating Circumstances </h4>
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+        
+{% endblock %}

@@ -1,0 +1,27 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<!--    <a href="{{ url_for('exampleFormCreate') }}">Create new dataset</a>
+    <br>
+    <br>-->
+    <form action="{{url_for('exampleFormCreate')}}">
+        <input type="submit" value="Create new data"/>
+    </form>
+    {% for data in data %} <!--will loop through the database                    -->
+        <div class="col">Name: {{data.name}}</div>
+        <div class="col">Text: {{data.text}}</div>
+        The data below is baked into ndb models:
+        <div class="col">ndb id: {{data.key.id()}}</div>
+        <div class="col">ndb kind: {{data.key.kind()}}</div>
+        <form action="/{{data.key.id()}}/edit">
+            <input type="submit" value="Edit {{data.name}}"/>
+        </form>
+        <form action="/{{data.key.id()}}/delete">
+            <input type="submit" value="Delete {{data.name}}"/>
+        </form>
+        <br>
+        <br>
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,396 @@
+#!/usr/bin/env python
+from flask import Flask, render_template, request, redirect, flash, url_for
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user, UserMixin
+from flask_wtf import FlaskForm, CSRFProtect
+from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
+from flask_dance.contrib.github import make_github_blueprint, github
+from flask_dance.contrib.google import make_google_blueprint, google 
+
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
+
+from google.appengine.ext import ndb
+
+from forms import LoginForm, ExampleDataForm
+from config import Config
+#from models import User
+from controllers import UserController, ExampleDataController 
+
+
+
+
+
+app = Flask(__name__)
+app.config.from_object(Config)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+app.config['SECRET_KEY'] = 'you-will-never-guess'
+csrf = CSRFProtect(app)
+google_blueprint = make_google_blueprint(client_id='',client_secret='')
+twitter_blueprint = make_twitter_blueprint(api_key ='', api_secret='')
+# api key = 
+#api seceret = 
+github_blueprint = make_github_blueprint(client_id='', client_secret='')
+
+app.register_blueprint(twitter_blueprint, url_prefix='')
+
+
+
+# class User(UserMixin, ndb.Model): # this is the flask-login model
+#     user_email = ndb.StringProperty(required=True, indexed=True)
+
+
+@app.route('/generateexample')
+def generate():
+    exampleUser = User() #specifies the creation of a new dataset
+    exampleUser.user_email = "gep.went@gmail.com" #links the data to the importted vars
+    exampleUser.put()
+
+    exampleUser2 = User() #specifies the creation of a new dataset
+    exampleUser2.user_email = "mark@gmail.com" #links the data to the importted vars
+    exampleUser2.put()
+    return redirect('/')
+
+#TO BE REMOVED
+#Models for the noSQL database 
+from google.appengine.ext import ndb
+from flask_login import UserMixin
+
+
+
+
+
+class ExampleDataModel(ndb.Model):
+    name = ndb.StringProperty()
+    email = ndb.StringProperty()
+    text = ndb.StringProperty()
+#TO HERTE REMOVE
+
+
+
+# @login_manager.user_loader
+# def load_user('5066549580791808'):
+#     return User.get_by_id(int(user_id))
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return "your now logged out!"
+
+@app.route('/home')
+@login_required
+def home():
+    return "current user is " + current_user.user_email
+
+
+
+
+
+# class User(ndb.Model): #google noSQL model creation   
+#     name = ndb.StringProperty()
+#     email = ndb.StringProperty()
+#     password = ndb.StringProperty()
+#    # Uemail_key = User.put()
+
+
+
+
+
+class User(ndb.Model):
+    name = ndb.StringProperty()
+    email = ndb.StringProperty()
+
+
+@app.route('/generateuser')
+def generateuser():
+    exampleUser = User()
+    exampleUser.name = "George" #specifies the creation of a new dataset
+    exampleUser.email = "gep.went@gmail.com" #links the data to the importted vars
+    exampleUser.put()
+
+    exampleUser2 = User() #specifies the creation of a new dataset
+    exampleUser2.name = "Mark"
+    exampleUser2.email = "mark@gmail.com" #links the data to the importted vars
+    exampleUser2.put()
+    return redirect('/')
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get_by_id(int(user_id))
+
+@app.route('/', methods=['GET', 'POST'])
+def testlogin():
+
+    #user = User.query(getattr(User, 'user_email') == 'gep.went@gmail.com')
+    #login_user(user)
+
+
+
+    check = 'abc@gmail.com'
+    query = User.query(User.email == check).get()
+    # print query.name
+    # print query.email
+    if (query): 
+        print query
+        return "logged in"
+    else:
+        return "not logged in"
+    
+    #query = User.query(ndb.GenericProperty('email') == check)
+    #query = User.query(User._properties[User.email] == str(check))
+    #query = User.query(getattr(User, User.email) == check)
+
+  # query = User.query(ancestor=email).filter(ndb.OR(Comment.modifiedDate > lastSyncDate, Comment.activityDate > lastSyncDate))
+    #q = query.email
+   # print str(query)
+# -> Query(kind='Employee')
+    #print query
+    #query = User.query()
+    #queryuser = User.query().filter(User.email == 'gep.went@gmail.com')
+
+    #login_user(queryuser)
+    #checkTable = User.get()
+    #checkTable.email = check
+    #checkTable_key = checkTable
+    #query = checkTable_key.get()
+
+    #print str(checkTable_key)
+
+    #results = User.query().fetch() #this returns a list / array
+
+    #print(results)
+    #print "query all" + str(queryall)
+
+    #for  result in results: 
+      #print "query all" + str(result.email) 
+
+   
+    
+
+
+
+
+
+@app.route('/twitter')
+def twitter_login():
+    if not twitter.authorized:
+        return redirect(url_for('twitter.login'))
+    accout_info = twitter.get('')
+
+    if accout_info.ok:
+        accout_info.json = accout_info.json()
+        return '<h1>you are {}</h1>'.format()
+
+
+# @app.route('/index')
+# def index():
+#     # user = {'username': 'George'}
+#     # posts = [
+#     #     {
+#     #         'author': {'username': 'John'},
+#     #         'body': 'Beautiful day in Portland!'
+#     #     },
+#     #     {
+#     #         'author': {'username': 'Susan'},
+#     #         'body': 'The Avengers movie was so cool!'
+#     #     }
+#     # ]
+#     return redirect('/examplecrud/index')
+#   #  return render_template('index.html', title='George', user=user, posts=posts)
+
+
+@app.route('/helloworld')
+def hello_world():
+    return render_template("index.html")
+
+@app.route('/george')
+def george():
+    user = {'username': 'George'}
+    return '''
+            <html>
+                <head>
+                    <title>Home Page - Microblog</title>
+                </head>
+                <body>
+                    <h1>Hello, ''' + user['username'] + '''!</h1>
+                </body>
+            </html>
+            '''
+
+@app.route('/georgetemplate')
+def GeorgeTemplate():
+    user = {'username': 'George'}
+    return render_template('George.html', title='Home', user=user)
+
+
+
+
+
+
+## ---------------------------------------
+## OAUTH LOGIN SYSTEMS
+## ---------------------------------------
+
+# #Google
+
+
+
+# # Google auth blueprint
+# google_blueprint = make_google_blueprint(
+#     client_id=app.config['GOOGLE_CLIENT_ID'],
+#     client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+#     scope=['profile', 'email'],
+#     redirect_url='/dashboard'
+# )
+# #the blueprint is used to pass in api keys / secrets 
+# #as most retured oauth api's use json, the scope allows 
+# #you to referance certian parts of the json
+# app.register_blueprint(google_blueprint, url_prefix="/login")
+# #url_prefix is so that you can use /login/google etc.
+
+# @app.route('/google')
+# def google_login():
+#     if not google.authorized:
+#         return redirect(url_for('google.login'))    
+#         #when the user goes to the login page for google, 
+#         #they will automatical fail the auth - sending them to the google login
+#     account_info = google.get("/oauth2/v2/userinfo")
+
+#     if account_info.ok:
+#         account_info_json = account_info.json() 
+#         #converts the json string into a python dictionary file
+
+#     return "You are {email} on Google".format(email=account_info_json.json()["email"])
+
+
+blueprint = make_google_blueprint(
+    client_id="387304838520-akpabffaehou0jegjcnjh7q85jfor2bp.apps.googleusercontent.com",
+    client_secret="7MGjtbm_aM5RMBBeDHUS-cys",
+    scope=[
+        "https://www.googleapis.com/auth/plus.me",
+        "https://www.googleapis.com/auth/userinfo.email",
+    ]
+)
+app.register_blueprint(blueprint, url_prefix="/login")
+
+@app.route("/google")
+def google_login():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    resp = google.get("/oauth2/v2/userinfo")
+    assert resp.ok, resp.text
+    return "You are {email} on Google".format(email=resp.json()["email"])
+
+
+
+
+## --------------------------------------
+## EXAMPLE CRUD APP
+## ---------------------------------------
+
+
+#index of datasets
+@app.route('/examplecrud/index', methods=['GET'])
+def exampleFormGet():
+    
+    return render_template(
+        'examplecrud/index.html',
+        title='Example Form Index',
+        data=ExampleDataController().index()
+    )              
+
+
+# Creating a dataset
+@app.route('/examplecrud/create', methods=['GET','POST'])
+def exampleFormCreate():
+    form = ExampleDataForm()
+    if request.method == 'POST' and form.validate_on_submit():
+
+        ExampleDataController().create(
+            name = request.form['name'],
+            text = request.form['text']
+        )
+
+        print request.form['name']
+        print request.form['text']
+
+        return redirect('examplecrud/create')
+    return render_template(
+                        'examplecrud/create.html', 
+                        title='Example Form', 
+                        form=form
+                        )
+
+
+
+
+@app.route('/<id>/edit', methods=['GET','POST'])
+def editForm(id): #this variable is taken from the url 
+    form = ExampleDataForm()
+
+    queryid = int(id)# converts the html id into a int
+    if request.method == 'POST' and form.validate_on_submit():#does it have a post method
+
+        ExampleDataController().edit(
+            id = queryid,
+            name = request.form['name'],
+            text = request.form['text']
+        )
+        return redirect('/'+id+'/edit')
+  
+  
+    return render_template(
+        'examplecrud/edit.html',
+         title ='form show', 
+         form = form,
+         data = ExampleDataController().query(queryid) ##used to query the correct data to display
+         )
+
+
+
+@app.route('/<id>/delete', methods=['GET','POST'])
+def deleteForm(id):
+    queryid = int(id)
+    #if request.method == 'POST':
+    ExampleDataController().delete(id = queryid)
+    print "delet"
+
+    return redirect('examplecrud/index')
+    
+
+
+#---------------------------------------------------------
+
+
+
+#@app.route('/(\d+)/delete')
+
+
+
+# Login and Logout Funcitons
+
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     if current_user.is_authenticated:
+#         return redirect(url_for('index')) #if the user is already logged in, they return to the index page
+#     form = LoginForm()
+#     if form.validate_on_submit():
+
+#         user = User.query.filter_by(username=form.username.data).first()
+#         if user is None or not user.check_password(form.password.data):
+#             flash('Invalid username or password')
+#             return redirect(url_for('login'))
+#         login_user(user, remember=form.remember_me.data)
+
+#         return redirect(url_for('index'))
+#     return render_template('login.html', title='Sign In', form=form)
+
+# @app.route('/logout')
+# def logout():
+#     logout_user()
+#     return redirect(url_for('index'))

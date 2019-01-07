@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+ 
+<div class="container py-4">
+  <div class="card">
+    <div class="card-body">
+
+     
+        
+
+
+      <h1 class="card-title">Subjects</h1>
+        </div>
+        {% if Subjects is not none %}
+        <div class="container">
+          <div class="row">
+            <div class="col">Subject Name</div>
+          </div>     
+        </div>     
+        <div class="card .list-group-flush">
+        
+          {% for Subject in Subjects %}
+          <a class="d-flex flex-row" href="/{{Subject.key.id()}}/edit">
+            <div class="col">{{Subject.name}}</div>
+          </a>
+
+          {% endfor %}
+          
+        {% else %}
+          <div class = "container">
+            <h4> You have no Subjects - add some </h4>
+          </div>
+        {% endif %}
+
+      <div class="card">
+        <br>
+        <div class="card-body">
+          <h2 class="card-title">Add New Subject</h2>
+            <form method="post" action="">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            
+            <div class="form-group">
+              <label for="InputSubjectName">Subject Name</label>
+              <input type="text" class="form-control" name="subject"  placeholder="Subject Name">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

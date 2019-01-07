@@ -1,0 +1,81 @@
+
+{% extends "templates/base.html" %}
+{% block content %}
+
+<div class="container py-4">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Mitigating Circumstances</h1>
+     
+        <div class="form-group row">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">Unit</label>
+          <div class="col-sm-3">
+
+                <select class="form-control" id="exampleFormControlSelect1">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+         
+          </div>
+        </div>
+
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col">Student Name</div>
+          <div class="col">Unit</div>
+          <div class="col">Title</div>  
+          <div class="col">Status</div>    
+        </div>     
+      </div>     
+      <div class="card .list-group-flush">
+        {% for mitcert in MitigatingCircumstances %}
+        <a class="d-flex flex-row" href="/students/{{student.key.id()}}">
+          <div class="col">{{mitcert.name}}</div>
+          <div class="col">{{mitcert.unit}}</div>
+          <div class="col">{{mitcert.title}}</div>
+          <div class="col">{{mitcert.status}}</div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+    
+  <div class="container py-4">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Submit Mitigating Circumstance</h2>
+        <form method="post" action="/signup">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <div class="form-group">
+            <label for="InputEmail">Title</label>
+            <input type="email" class="form-control" name="email"  placeholder="Title">
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlSelect1">Subject</label>
+            <select class="form-control" id="exampleFormControlSelect1">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">Reason</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="reason for mitigating circumstance"></textarea>
+          </div>
+          
+          <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
+    
+
+{% endblock %}

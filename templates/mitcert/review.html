@@ -1,0 +1,73 @@
+
+{% extends "base.html" %}
+{% block content %}
+ 
+<div class="container py-4">
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">Review  Mitigating Circumstance</h2>
+        <div class="container py-4">
+
+
+
+          <div class="row">
+            <div class="col-sm-2">
+                <h5 class = "card-title">Student</h5>
+            </div>
+            <div class="col-sm">
+                {{MitigatingCircumstance.student}}
+            </div>
+            <div class="col-sm-2">
+              <h5 class = "card-title">Email</h5>
+            </div>
+            <div class="col-sm-5">
+              {{MitigatingCircumstance.student_email}}
+            </div>
+          </div>
+
+                    
+          <div class="row">
+            <div class="col-sm-2">
+                <h5 class = "card-title">Title</h5>
+            </div>
+            <div class="col-sm">
+                {{MitigatingCircumstance.title}}
+            </div>
+            <div class="col-sm-2">
+              <h5 class = "card-title">Subject</h5>
+            </div>
+            <div class="col-sm-5">
+              {{MitigatingCircumstance.subject}}
+            </div>
+          </div>
+        <br>
+        <div class="card">
+          <div class="card-body">
+           {{MitigatingCircumstance.reason}}.
+          </div>
+        </div>
+        </div>
+
+      <form method="post" action="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
+        <div class="form-group">
+          <label for="subject">State</label>
+          <select class="form-control" id="state" name="state">
+              <option>New</option>
+              <option>Under Review</option>
+              <option>Accepted</option>
+              <option>Denied</option>
+          </select>
+      
+        </div>
+        
+        <br>
+          <button type="submit" class="btn btn-primary">Update Submission</button>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
